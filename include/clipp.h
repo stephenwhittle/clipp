@@ -4403,6 +4403,24 @@ private:
 };
 
 
+/*
+ * @brief keeps track of a longest match across different params
+ */
+class longest_match {
+public:
+    longest_match() = default;
+    match_t get() const noexcept { return match_; }
+
+    void update(const match_t &match) {
+        if (match.str().length() > match_.str().length()) {
+            match_ = match;
+        }
+    }
+
+private:
+    match_t match_;
+};
+
 
 /*************************************************************************//**
  *
