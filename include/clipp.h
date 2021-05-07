@@ -4403,24 +4403,6 @@ private:
 };
 
 
-/*
- * @brief keeps track of a longest match across different params
- */
-class longest_match {
-public:
-    longest_match() = default;
-    match_t get() const noexcept { return match_; }
-
-    void update(const match_t &match) {
-        if (match.str().length() > match_.str().length()) {
-            match_ = match;
-        }
-    }
-
-private:
-    match_t match_;
-};
-
 
 /*************************************************************************//**
  *
@@ -4475,7 +4457,7 @@ longest_prefix_match(scoped_dfs_traverser pos, const arg_string& arg,
                     }
                     else if(match.length() > longest.length()) {
                         longest = match_t{arg.substr(match.at(), match.length()), 
-                                          pos};
+                                          std::move(pos)};
                     }
                 }
             }
