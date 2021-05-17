@@ -14,7 +14,12 @@
 #include <clipp.h>
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_groups_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -54,4 +59,5 @@ int main(int argc, char* argv[])
              << "e = " << e << '\n'
              << "f = " << f << '\n';
     }
+	return EXIT_SUCCESS;
 }

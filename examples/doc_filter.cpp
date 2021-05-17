@@ -12,7 +12,12 @@
 #include "clipp.h"
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_doc_filter_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -42,4 +47,5 @@ int main(int argc, char* argv[])
              << "recursive:  " << (rec ? "yes\n" : "no\n")
              << "UTF-16:     " << (utf16 ? "yes\n" : "no\n");
     }
+	return EXIT_SUCCESS;
 }

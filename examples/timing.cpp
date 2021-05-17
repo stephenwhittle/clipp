@@ -15,7 +15,12 @@
 #include <clipp.h>
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_timing_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::string;
@@ -42,4 +47,6 @@ int main(int argc, char* argv[])
     cout << '\n';
     cout << n << " times\n";
     if(errStop) cout << "execution will be stopped on any error\n";
+
+	return EXIT_SUCCESS;
 }

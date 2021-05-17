@@ -15,7 +15,12 @@
 #include <clipp.h>
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_complex_nesting_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -75,4 +80,5 @@ int main(int argc, char* argv[])
         auto fmt = doc_formatting{}.doc_column(31).last_column(80);
         cout << make_man_page(cli, argv[0], fmt) << '\n';
     }
+	return EXIT_SUCCESS;
 }

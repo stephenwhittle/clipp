@@ -40,7 +40,12 @@
 #include <clipp.h>
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_naval_fate_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::string;
@@ -134,5 +139,5 @@ int main(int argc, char* argv[])
         std::cerr << "Wrong command line arguments.\nUsage:"
                   << usage_lines(navalcli, "naval_fate", fmt) << '\n';
     }
-
+	return EXIT_SUCCESS;
 }

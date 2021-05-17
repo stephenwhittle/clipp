@@ -79,6 +79,11 @@ make_cli_1()
 }
 
 //-------------------------------------------------------------------
+
+#if defined(BUILD_MONOLITHIC)
+#define main      clipp_prefix_free_test_main
+#endif
+
 int main()
 {
     using namespace clipp;
@@ -165,4 +170,6 @@ int main()
         std::cerr << e.what() << std::endl;
         return 1;
     }
+
+    return EXIT_SUCCESS;
 }

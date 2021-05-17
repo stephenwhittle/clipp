@@ -71,6 +71,11 @@ void test(int lineNo,
 
 
 //-------------------------------------------------------------------
+
+#if defined(BUILD_MONOLITHIC)
+#define main      clipp_blocking_test03_main
+#endif
+
 int main()
 {
     try {
@@ -129,4 +134,6 @@ int main()
         std::cerr << e.what() << std::endl;
         return 1;
     }
+
+    return EXIT_SUCCESS;
 }

@@ -43,6 +43,11 @@ test(int lineNo,
 
 
 //-------------------------------------------------------------------
+
+#if defined(BUILD_MONOLITHIC)
+#define main      clipp_joined_flags_test2_main
+#endif
+
 int main()
 {
     using std::string;
@@ -69,4 +74,6 @@ int main()
         std::cerr << e.what() << std::endl;
         return 1;
     }
+
+    return EXIT_SUCCESS;
 }

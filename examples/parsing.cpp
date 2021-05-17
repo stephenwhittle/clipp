@@ -15,7 +15,12 @@
 #include <clipp.h>
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_parsing_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -37,4 +42,6 @@ int main(int argc, char* argv[])
     auto result = parse(argc, argv, cli);
 
     clipp::debug::print(std::cout, result);
+
+	return EXIT_SUCCESS;
 }

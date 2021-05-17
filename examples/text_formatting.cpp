@@ -17,7 +17,12 @@
 #include "../include/clipp.h"
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_text_formatting_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -39,8 +44,8 @@ int main(int argc, char* argv[])
         << "You can use the following command line interface to re-format\n"
         << "the documentation text of a more complex command line interface\n"
         << "Usage:\n" << usage_lines(fmtcli, argv[0]) << '\n';
-        return 0;
-    }
+		return EXIT_SUCCESS;
+	}
     if(docCol < firstCol) docCol = firstCol;
     if(lastCol <= docCol) lastCol = docCol+1;
 
@@ -112,4 +117,6 @@ int main(int argc, char* argv[])
     cout << make_man_page(cli, argv[0], fmt) << '\n';
 //    cout << documentation(cli, fmt) << '\n';
 //    cout << usage_lines(cli, argv[0], fmt) << '\n';
+
+	return EXIT_SUCCESS;
 }

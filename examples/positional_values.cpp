@@ -14,7 +14,12 @@
 #include <clipp.h>
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_positional_values_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -42,4 +47,5 @@ int main(int argc, char* argv[])
 //        value("outfile")        % "output filename" >> ofile,
 //        option("-s", "--split") % "split files"     >> split  );
 
+	return EXIT_SUCCESS;
 }

@@ -14,6 +14,11 @@
 #include <clipp.h>
 
 
+
+#if defined(BUILD_MONOLITHIC)
+#define main      clipp_sanity_main
+#endif
+
 int main()
 {
     using namespace clipp;
@@ -27,4 +32,6 @@ int main()
 
     cout << "flags are " << (cli.flags_are_prefix_free() ? "" : "not ")
          << "prefix free\n";
+
+	return EXIT_SUCCESS;
 }

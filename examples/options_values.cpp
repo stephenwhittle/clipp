@@ -14,7 +14,12 @@
 #include <clipp.h>
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_options_values_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -37,4 +42,5 @@ int main(int argc, char* argv[])
     else {
         cout << make_man_page(cli, argv[0]) << '\n';
     }
+	return EXIT_SUCCESS;
 }

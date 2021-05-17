@@ -34,7 +34,7 @@ struct settings {
 
 
 //-------------------------------------------------------------------
-settings configuration(int argc, char* argv[])
+settings configuration(int argc, const char* argv[])
 {
     using namespace clipp;
 
@@ -124,7 +124,12 @@ settings configuration(int argc, char* argv[])
 
 
 //-------------------------------------------------------------------
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_model_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     try {
         auto conf = configuration(argc, argv);
@@ -133,4 +138,5 @@ int main(int argc, char* argv[])
     catch(std::exception& e) {
         std::cerr << "ERROR: " << e.what() << '\n';
     }
+	return EXIT_SUCCESS;
 }

@@ -15,7 +15,12 @@
 #include <clipp.h>
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_finder_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -70,4 +75,5 @@ int main(int argc, char* argv[])
     } else {
         cout << usage_lines(cli, execname) << '\n';
     }
+	return EXIT_SUCCESS;
 }

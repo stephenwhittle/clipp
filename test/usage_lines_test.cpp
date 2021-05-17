@@ -31,6 +31,11 @@ void test(int lineNo, const doc_formatting& fmt,
 
 
 //-------------------------------------------------------------------
+
+#if defined(BUILD_MONOLITHIC)
+#define main      clipp_usage_lines_test_main
+#endif
+
 int main()
 {
     try {
@@ -370,4 +375,6 @@ int main()
         std::cerr << e.what() << std::endl;
         return 1;
     }
+
+    return EXIT_SUCCESS;
 }

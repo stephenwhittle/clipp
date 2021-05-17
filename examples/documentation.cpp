@@ -14,7 +14,12 @@
 #include <clipp.h>
 
 
-int main()
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_documentation_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -64,4 +69,6 @@ int main()
     cout << make_man_page(cli, "worddb", fmt)
         .prepend_section("DESCRIPTION", "    Builds a database of words from text files.")
         .append_section("LICENSE", "    GPL3") << '\n';
+
+	return EXIT_SUCCESS;
 }

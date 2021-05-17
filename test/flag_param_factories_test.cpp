@@ -14,7 +14,7 @@
 //-------------------------------------------------------------------
 /** @brief test if parameter factory call expressions compile
  */
-void test_init_expressions_compile(int argc, char* argv[])
+void test_init_expressions_compile(int argc, const char** argv)
 {
     using namespace clipp;
 
@@ -74,7 +74,12 @@ void test_param_init(int lineNo,
 
 
 //-------------------------------------------------------------------
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main      clipp_flag_param_factories_test_main
+#endif
+
+int main(int argc, const char **argv)
 {
     test_init_expressions_compile(argc, argv);
 
@@ -153,4 +158,6 @@ int main(int argc, char* argv[])
         std::cerr << e.what() << std::endl;
         return 1;
     }
+
+    return EXIT_SUCCESS;
 }

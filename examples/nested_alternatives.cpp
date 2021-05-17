@@ -15,7 +15,12 @@
 #include <clipp.h>
 
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      clipp_nested_alternatives_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     using namespace clipp;
     using std::cout;
@@ -55,7 +60,7 @@ int main(int argc, char* argv[])
         switch(selected) {
             default:
             case mode::help:
-                cout << make_man_page(cli, argv[0]) << '\n'; return 0;
+                cout << make_man_page(cli, argv[0]) << '\n'; return EXIT_SUCCESS;
             case mode::build:
                 if(add)
                     cout << "adding to database\n";
@@ -78,4 +83,5 @@ int main(int argc, char* argv[])
     else {
         cout << usage_lines(cli, argv[0]) << '\n';
     }
+	return EXIT_SUCCESS;
 }
