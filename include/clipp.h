@@ -5338,7 +5338,7 @@ parse(InputIterator first, InputIterator last, const group& cli)
  *
  *****************************************************************************/
 inline parsing_result
-parse(const int argc, char* argv[], const group& cli, arg_index offset = 1)
+parse(const int argc, const char** argv, const group& cli, arg_index offset = 1)
 {
     arg_list args;
     if(offset < argc) args.assign(argv+offset, argv+argc);
@@ -5346,6 +5346,16 @@ parse(const int argc, char* argv[], const group& cli, arg_index offset = 1)
     return detail::parse_and_execute(args, cli, offset);
 }
 
+/*************************************************************************//**
+ *
+ * @brief parses the standard array of command line arguments; omits argv[0]
+ *
+ *****************************************************************************/
+inline parsing_result
+parse(const int argc, char** argv, const group& cli, arg_index offset = 1)
+{
+	return parse(argc, (const char **)argv, cli, offset);
+}
 
 
 
