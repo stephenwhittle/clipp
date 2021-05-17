@@ -9,11 +9,12 @@
  *****************************************************************************/
 
 #include "testing.h"
+#include "monolithic_tests.h"
 
 using namespace clipp;
 
 //-------------------------------------------------------------------
-void test(int lineNo, const doc_formatting& fmt,
+static void test(int lineNo, const doc_formatting& fmt,
           const group& cli, const std::string& expected)
 {
     auto doc = documentation(cli,fmt).str();

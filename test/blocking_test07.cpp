@@ -10,6 +10,7 @@
 
 //don't include anything else before the test subject
 #include "testing.h"
+#include "monolithic_tests.h"
 
 
 //-------------------------------------------------------------------
@@ -29,7 +30,7 @@ struct active {
 
 
 //-------------------------------------------------------------------
-void test(int lineNo,
+static void test(int lineNo,
           const std::initializer_list<const char*> args,
           const active& matches)
 {

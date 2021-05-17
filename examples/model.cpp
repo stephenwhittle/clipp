@@ -15,6 +15,8 @@
 
 #include <clipp.h>
 
+#include "monolithic_examples.h"
+
 
 //-------------------------------------------------------------------
 enum class mode {

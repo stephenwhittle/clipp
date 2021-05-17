@@ -14,6 +14,8 @@
 
 #include <clipp.h>
 
+#include "monolithic_examples.h"
+
 
 
 #if defined(BUILD_MONOLITHIC)

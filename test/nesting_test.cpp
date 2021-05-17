@@ -9,6 +9,7 @@
  *****************************************************************************/
 
 #include "testing.h"
+#include "monolithic_tests.h"
 
 
 //-------------------------------------------------------------------
@@ -40,7 +41,7 @@ private:
 
 
 //-------------------------------------------------------------------
-void test(int lineNo,
+static void test(int lineNo,
           const std::initializer_list<const char*> args,
           const active& matches,
           const active& conflict = active{})

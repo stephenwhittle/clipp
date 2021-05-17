@@ -9,10 +9,11 @@
  *****************************************************************************/
 
 #include "testing.h"
+#include "monolithic_tests.h"
 
 
 //-------------------------------------------------------------------
-void test(int lineNo, bool expected, const clipp::group& cli)
+static void test(int lineNo, bool expected, const clipp::group& cli)
 {
     if(cli.flags_are_prefix_free() != expected) {
 

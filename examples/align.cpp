@@ -14,6 +14,8 @@
 
 #include <clipp.h>
 
+#include "monolithic_examples.h"
+
 
 
 #if defined(BUILD_MONOLITHIC)
@@ -83,4 +85,6 @@ int main(int argc, const char** argv)
         case omode::stdio:  /* ... */    break;          
         case omode::file:   /* ... */    break;
     }
+
+	return EXIT_SUCCESS;
 }

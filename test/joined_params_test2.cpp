@@ -9,6 +9,7 @@
  *****************************************************************************/
 
 #include "testing.h"
+#include "monolithic_tests.h"
 
 
 //-------------------------------------------------------------------
@@ -27,7 +28,7 @@ struct counters {
 
 
 //-------------------------------------------------------------------
-void test(int lineNo,
+static void test(int lineNo,
           const std::initializer_list<const char*> args,
           const counters& matches)
 {

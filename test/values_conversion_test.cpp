@@ -11,6 +11,7 @@
 #include <cmath>
 
 #include "testing.h"
+#include "monolithic_tests.h"
 
 //-------------------------------------------------------------------
 #if defined(_MSC_VER)
@@ -59,7 +60,7 @@ struct equals<T,true,true> {
 
 //-------------------------------------------------------------------
 template<class T>
-void test(int lineNo, T x, const std::string& arg, T expected)
+static void test(int lineNo, T x, const std::string& arg, T expected)
 {
     using namespace clipp;
 

@@ -14,6 +14,8 @@
 #include <sstream>
 
 // #include <clipp.h>
+
+#include "monolithic_examples.h"
 #include "../include/clipp.h"
 
 
