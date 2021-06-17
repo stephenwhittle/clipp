@@ -30,7 +30,11 @@ namespace test10 {
 
 		friend bool operator == (const active& x, const active& y) noexcept {
 			return x.n == y.n && x.s == y.s && x.str == y.str &&
-				std::equal(x.nums.begin(), x.nums.end(), y.nums.begin());
+				(
+					(x.nums.size() == 0 && y.nums.size() == 0) ||
+					(x.nums.size() > 0 && y.nums.size() > 0 && x.nums.size() == y.nums.size() &&
+					std::equal(x.nums.begin(), x.nums.end(), y.nums.begin()))
+				);
 		}
 	};
 
