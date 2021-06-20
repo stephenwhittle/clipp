@@ -3,6 +3,10 @@
 
 #if defined(BUILD_MONOLITHIC)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int clipp_actions_main(int argc, const char** argv);
 int clipp_align_main(int argc, const char** argv);
 int clipp_alternatives_main(int argc, const char** argv);
@@ -36,5 +40,9 @@ int clipp_tagnames_main(int argc, const char** argv);
 int clipp_text_formatting_main(int argc, const char** argv);
 int clipp_timing_main(int argc, const char** argv);
 int clipp_transform_main(int argc, const char** argv);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
