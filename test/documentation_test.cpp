@@ -25,8 +25,8 @@ static void test(int lineNo, const doc_formatting& fmt,
     if(doc != expected) {
         std::cout << "\nEXPECTED:\n" << expected << "\nOBSERVED:\n" << doc << '\n';
 
-        throw std::runtime_error{"failed " + std::string( __FILE__ ) +
-                                 " in line " + std::to_string(lineNo)};
+        throw std::runtime_error("failed " + std::string( __FILE__ ) +
+                                 " in line " + std::to_string(lineNo));
     }
 }
 
