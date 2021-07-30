@@ -4884,7 +4884,7 @@ private:
             matches.push_back(std::move(match));
         }
 
-        if(!arg.empty() || matches.empty()) return false;
+        if(matches.empty()) return false;
 
         if(!parse.missCand_.empty()) return false;
         for(const auto& a : parse.args_) if(a.any_error()) return false;
