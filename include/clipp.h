@@ -3004,7 +3004,7 @@ public:
         depth_first_traverser&
         operator ++ () {
             if(stack_.empty()) return *this;
-            //at group -> decend into group
+            //at group -> descend into group
             if(stack_.back().cur->is_group()) {
                 stack_.emplace_back(stack_.back().cur->as_group());
             }
