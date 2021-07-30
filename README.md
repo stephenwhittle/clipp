@@ -185,25 +185,25 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-There are two kinds of building blocks for command line interfaces: parameters and groups. Convieniently named factory functions produce parameters or groups with the desired settings applied.
+There are two kinds of building blocks for command line interfaces: parameters and groups. Conveniently named factory functions produce parameters or groups with the desired settings applied.
 #### Parameters ([flag strings](#flag-strings), [commands](#commands), [positional values](#required-positional-values), [required flags](#required-flags), [repeatable parameters](#repeatable-parameters))
 ```cpp
 bool a = false, f = false;
 string s; vector<string> vs;
-auto cli = (                             // matches  required  positional  repeatable
-    command("push"),                     // exactly      yes       yes         no
-    required("-f", "--file").set(f),     // exactly      yes       no          no
-    required("-a", "--all", "-A").set(a),  // exactly      no        no          no
+auto cli = (                              // matches  required  positional  repeatable
+    command("push"),                      // exactly      yes       yes         no
+    required("-f", "--file").set(f),      // exactly      yes       no          no
+    required("-a", "--all", "-A").set(a), // exactly      no        no          no
                                                   
-    value("file", s),                    // any arg      yes       yes         no
-    values("file", vs),                  // any arg      yes       yes         yes
-    opt_value("file", s),                // any arg      no        yes         no
-    opt_values("file", vs),              // any arg      no        yes         yes
+    value("file", s),                     // any arg      yes       yes         no
+    values("file", vs),                   // any arg      yes       yes         yes
+    opt_value("file", s),                 // any arg      no        yes         no
+    opt_values("file", vs),               // any arg      no        yes         yes
     
     //"catch all" parameter - useful for error handling
-    any_other(vs),                       // any arg      no        no          yes
+    any_other(vs),                        // any arg      no        no          yes
     //catches arguments that fulfill a predicate and aren't matched by other parameters
-    any(predicate, vs)                   // predicate    no        no          yes
+    any(predicate, vs)                    // predicate    no        no          yes
 );
 ```
 The functions above are convenience factories:
@@ -220,7 +220,7 @@ auto r2 = parameter{"-f", "--file"}.required(true).set(f);
  - a required parameter has to match at least one command line argument 
  - a repeatable parameter can match any number of arguments
  - non-positional (=non-blocking) parameters can match arguments in any order
- - a positional (blocking) parameter defines a "stop point", i.e., until it matches all parameters following it are not allowed to match; once it matched, all parameters preceding it (wihtin the current group) will become unreachable 
+ - a positional (blocking) parameter defines a "stop point", i.e., until it matches all parameters following it are not allowed to match; once it matched, all parameters preceding it (within the current group) will become unreachable 
 
 ##### [Flags + Values](#options-with-values)
 If you want parameters to be matched in sequence, you can tie them together using either ```operator &``` or the grouping function ```in_sequence```:
@@ -1892,7 +1892,7 @@ auto args = std::vector<std::string> {"make", "out.txt", "-f"};
 parse(args, cli);
 ```
 
-The parse functions return an object of ```parsing_result``` which can be used for detailed analysis and will (explicitly) convert to false if any error occured during parsing. 
+The parse functions return an object of ```parsing_result``` which can be used for detailed analysis and will (explicitly) convert to false if any error occurred during parsing. 
 ```cpp
 auto result = parse(argc, argv, cli);
 
