@@ -337,7 +337,6 @@ fwd_to_unsigned_int(const char*& s)
     if(!s) return false;
     for(; txt::isspace(*s); ++s);
     if(!s[0] || s[0] == '-') return false;
-    if(s[0] == '-') return false;
     return true;
 }
 
