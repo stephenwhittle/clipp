@@ -192,16 +192,16 @@ check_is_callable(int) -> decltype(
     std::integral_constant<bool,
         std::is_same<Ret,typename invoke_result<Fn,Args...>::type>::value>{} );
 
+template<class,class,class...>
+constexpr auto
+check_is_callable(long) -> std::false_type;
+
 template<class Fn, class Ret>
 constexpr auto
 check_is_callable_without_arg(int) -> decltype(
     std::declval<Fn>()(),
     std::integral_constant<bool,
         std::is_same<Ret,typename invoke_result<Fn>::type>::value>{} );
-
-template<class,class,class...>
-constexpr auto
-check_is_callable(long) -> std::false_type;
 
 template<class,class>
 constexpr auto
