@@ -80,7 +80,7 @@ void test_param_init(int lineNo,
 #define main      clipp_flag_param_factories_test_main
 #endif
 
-int main(int argc, const char **argv)
+int main(int argc, const char** argv)
 {
     test_init_expressions_compile(argc, argv);
 

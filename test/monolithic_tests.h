@@ -18,7 +18,7 @@ int clipp_blocking_test09_main();
 int clipp_blocking_test10_main();
 int clipp_documentation_test_main();
 int clipp_empty_args_main();
-int clipp_flag_param_factories_test_main(int argc, const char **argv);
+int clipp_flag_param_factories_test_main(int argc, const char** argv);
 int clipp_joined_flags_test1_main();
 int clipp_joined_flags_test2_main();
 int clipp_joined_flags_test3_main();

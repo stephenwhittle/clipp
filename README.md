@@ -1,13 +1,13 @@
 clipp - command line interfaces for modern C++
 ===========================================================
 
-[![Linux build status](https://travis-ci.org/GerHobbelt/clipp.svg?branch=master)](https://travis-ci.org/GerHobbelt/clipp) 
+[![Linux build status](https://travis-ci.org/GerHobbelt/clipp.svg?branch=master)](https://travis-ci.org/GerHobbelt/clipp)
 [![MSVC build status](https://ci.appveyor.com/api/projects/status/ci29ngpfks980i7g?svg=true)](https://ci.appveyor.com/project/GerHobbelt/clipp)
 
-Easy to use, powerful and expressive command line argument handling for C++11/14/17 contained in a **single header file**. 
+Easy to use, powerful and expressive command line argument handling for C++11/14/17 contained in a **single header file**.
 
 - options, options+value(s), positional values, positional commands, nested alternatives, decision trees, joinable flags, custom value filters, ...
-- documentation generation (usage lines, man pages); error handling 
+- documentation generation (usage lines, man pages); error handling
 - lots of examples; large set of tests
 
 - ### [Quick Reference Table](#quick-reference)
@@ -36,7 +36,7 @@ Here is the code that defines the positional value ```input file``` and the thre
 #include "clipp.h"
 using namespace clipp; using std::cout; using std::string;
 
-int main(int argc, char* argv[]) { 
+int main(int argc, const char** argv) {
     bool rec = false, utf16 = false;
     string infile = "", fmt = "csv";
 
@@ -58,11 +58,11 @@ int main(int argc, char* argv[]) {
 ```man
 SYNOPSIS
     finder make <wordfile> -dict <dictionary> [--progress] [-v]
-    finder find <infile>... -dict <dictionary> [-o <outfile>] [-split|-nosplit] [-v] 
+    finder find <infile>... -dict <dictionary> [-o <outfile>] [-split|-nosplit] [-v]
     finder help [-v]
 
 OPTIONS
-    --progress, -p           show progress                       
+    --progress, -p           show progress
     -o, --output <outfile>   write to file instead of stdout
     -split, -nosplit         (do not) split output
     -v, --version            show version
@@ -120,7 +120,7 @@ Below are a few examples that should give you an idea for how clipp works.
 Consider this basic setup with a few variables that we want to set using
 command line arguments:
 ```cpp
-int main(int argc, char* argv[]) { 
+int main(int argc, const char** argv) {
     using namespace clipp;
 
     // define some variables
@@ -174,7 +174,7 @@ Namespace qualifiers are omitted from all examples for better readability. All e
 
 #### Basic Setup
 ```cpp
-int main(int argc, char* argv[]) { 
+int main(int argc, const char** argv) {
     using namespace clipp;
 
     auto cli = ( /* CODE DEFINING COMMAND LINE INTERFACE GOES HERE */ );
@@ -194,12 +194,12 @@ auto cli = (                              // matches  required  positional  repe
     command("push"),                      // exactly      yes       yes         no
     required("-f", "--file").set(f),      // exactly      yes       no          no
     required("-a", "--all", "-A").set(a), // exactly      no        no          no
-                                                  
+
     value("file", s),                     // any arg      yes       yes         no
     values("file", vs),                   // any arg      yes       yes         yes
     opt_value("file", s),                 // any arg      no        yes         no
     opt_values("file", vs),               // any arg      no        yes         yes
-    
+
     //"catch all" parameter - useful for error handling
     any_other(vs),                        // any arg      no        no          yes
     //catches arguments that fulfill a predicate and aren't matched by other parameters
@@ -217,10 +217,10 @@ auto r1 = required("-f", "--file").set(f);
 // is equivalent to:
 auto r2 = parameter{"-f", "--file"}.required(true).set(f);
 ```
- - a required parameter has to match at least one command line argument 
+ - a required parameter has to match at least one command line argument
  - a repeatable parameter can match any number of arguments
  - non-positional (=non-blocking) parameters can match arguments in any order
- - a positional (blocking) parameter defines a "stop point", i.e., until it matches all parameters following it are not allowed to match; once it matched, all parameters preceding it (within the current group) will become unreachable 
+ - a positional (blocking) parameter defines a "stop point", i.e., until it matches all parameters following it are not allowed to match; once it matched, all parameters preceding it (within the current group) will become unreachable
 
 ##### [Flags + Values](#options-with-values)
 If you want parameters to be matched in sequence, you can tie them together using either ```operator &``` or the grouping function ```in_sequence```:
@@ -233,20 +233,20 @@ auto cli = (
 
     //required flag with optional value
     required("--file") & opt_value("name", s),
-    
+
     //option with exactly two values
     option("-p", "--pos") & value("x") & value("y"),
 
     //same as before                   v            v
     in_sequence( option("-p", "--pos") , value("x") , value("y") ),
-    
+
     //option with at least one value (and optionally more)
     option("-l") & values("lines", ls)
 );
 ```
 
 ##### [Filtering Value Parameters](#value-filters)
-Value parameters use a filter function to test if they are allowed to match an argument string. The default filter ```match::nonempty``` that is used by ```value```, ```values```, ```opt_value``` and ```opt_values``` will match any non-empty argument string. 
+Value parameters use a filter function to test if they are allowed to match an argument string. The default filter ```match::nonempty``` that is used by ```value```, ```values```, ```opt_value``` and ```opt_values``` will match any non-empty argument string.
 You can either supply other filter functions/function objects as first argument of ```value```, ```values```, etc. or use one of these built-in shorthand factory functions covering the most common cases:
 ```cpp
 string name; double r = 0.0; int n = 0;
@@ -286,7 +286,7 @@ value(is_char, "c", c);      // one character  yes       yes         no
    ```cpp
    double x = 0, y = 0, z = 0;
    auto cli1 = ( option("-pos") & value("X",x) & value("Y",y) & value("Z",z) );
-   
+
    auto cli2 = in_sequence( option("-pos") , value("X",x) , value("Y",y) , value("Z",z) );
    ```
    Note that surrounding groups are not affected by this, so that ```-a``` and ```-b``` can be matched in any order while ```-b``` and the value ```X``` must match in sequence:
@@ -335,14 +335,14 @@ value(is_char, "c", c);      // one character  yes       yes         no
 
 
 #### Interfacing With Your Code
-The easiest way to connect the command line interface to the rest of your code is to bind object values or function (object) calls to parameters (see also [here](#actions)):  
+The easiest way to connect the command line interface to the rest of your code is to bind object values or function (object) calls to parameters (see also [here](#actions)):
 ```cpp
 bool b = false; int i = 5; int m = 0; string x; ifstream fs;
-auto cli = ( 
+auto cli = (
     option("-b").set(b),                      // "-b" detected -> set b to true
     option("-m").set(m,2),                    // "-m" detected -> set m to 2
-    option("-x") & value("X", x),             // set x's value from arg string 
-    option("-i") & opt_value("i", i),         // set i's value from arg string  
+    option("-x") & value("X", x),             // set x's value from arg string
+    option("-i") & opt_value("i", i),         // set i's value from arg string
     option("-v").call( []{ cout << "v"; } ),  // call function (object) / lambda
     option("-v")( []{ cout << "v"; } ),       // same as previous line
     option("-f") & value("file").call([&](string f){ fs.open(f); })
@@ -353,7 +353,7 @@ In production code one would probably use a settings class:
 ```cpp
 struct settings { bool x = false; /* ... */ };
 
-settings cmdline_settings(int argc, char* argv[]) {
+settings cmdline_settings(int argc, const char** argv) {
     settings s;
     auto cli = ( option("-x").set(s.x), /* ... */ );
     parse(argc, argv, cli);
@@ -373,14 +373,14 @@ Docstrings for groups and for parameters can either be set with the member funct
 ```cpp
 auto cli = (
     (   option("x").set(x).doc("sets X"),
-        option("y").set(y) % "sets Y"         
+        option("y").set(y) % "sets Y"
     ),
-    "documented group 1:" % (  
-        option("-g").set(g).doc("activates G"),   
-        option("-h").set(h) % "activates H"   
+    "documented group 1:" % (
+        option("-g").set(g).doc("activates G"),
+        option("-h").set(h) % "activates H"
     ),
-    (   option("-i").set(i) % "activates I",   
-        option("-j").set(j) % "activates J" 
+    (   option("-i").set(i) % "activates I",
+        option("-j").set(j) % "activates J"
     ).doc("documented group 2:")
 );
 ```
@@ -418,7 +418,7 @@ auto fmt = doc_formatting{}
            .first_column(7)
            .doc_column(15)
            .last_column(99);
-cout << make_man_page(cli, "progname", fmt) << '\n'; 
+cout << make_man_page(cli, "progname", fmt) << '\n';
 ```
 
 
@@ -426,22 +426,22 @@ cout << make_man_page(cli, "progname", fmt) << '\n';
 Each parameter can have event handler functions attached to it. These are invoked once for each argument that is mapped to the parameter (or once per missing event):
 ```cpp
 string file = "default.txt";
-auto param = required("-nof").set(file,"") | 
-             required("-f") & value("file", file) 
+auto param = required("-nof").set(file,"") |
+             required("-f") & value("file", file)
                               // on 2nd, 3rd, 4th,... match (would be an error in this case)
-                              .if_repeated( [] { /* ... */ } )    
+                              .if_repeated( [] { /* ... */ } )
                               // if required value-param was missing
-                              .if_missing( [] { /* ... */ } )    
+                              .if_missing( [] { /* ... */ } )
                               // if unreachable, e.g. no flag "-f" before filename
-                              .if_blocked( [] { /* ... */ } )    
+                              .if_blocked( [] { /* ... */ } )
                               // if match is in conflict with other alternative "-nof"
-                              .if_conflicted( [] { /* ... */ } );   
+                              .if_conflicted( [] { /* ... */ } );
 ```
 The handler functions can also take an int, which is set to the argument index at which the event occurred first:
 ```cpp
 string file = "default.txt";
-auto param = required("-nof").set(file,"") | 
-             required("-f") & value("file", file) 
+auto param = required("-nof").set(file,"") |
+             required("-f") & value("file", file)
                               .if_repeated  ( [] (int argIdx) { /* ... */ } )
                               .if_missing   ( [] (int argIdx) { /* ... */ } )
                               .if_blocked   ( [] (int argIdx) { /* ... */ } )
@@ -450,17 +450,17 @@ auto param = required("-nof").set(file,"") |
 
 
 #### Special Cases
-If we give ```-f -b``` or ```-b -f -a``` as command line arguments for the following CLI, an error will be reported, since the value after ```-f``` is not optional: 
+If we give ```-f -b``` or ```-b -f -a``` as command line arguments for the following CLI, an error will be reported, since the value after ```-f``` is not optional:
 ```cpp
 auto cli = (  option("-a"),  option("-f") & value("filename"),  option("-b")  );
 ```
-This behavior is fine for most use cases. 
+This behavior is fine for most use cases.
 But what if we want our program to take any string as a filename, because our filenames might also collide with flag names? We can make the value parameter [greedy](#greedy-parameters) with ```operator !```. This way, the next string after ```-f``` will always be matched with highest priority as soon as ```-f``` was given:
 ```cpp
 auto cli = (  option("-a"),  option("-f") & !value("filename"),   option("-b")  );
-                                        //  ^~~~~~ 
+                                        //  ^~~~~~
 ```
-Be **very careful** with greedy parameters! 
+Be **very careful** with greedy parameters!
 
 
 
@@ -477,7 +477,7 @@ if(res.any_bad_repeat()) { /* ... */ }
 if(res.any_blocked())    { /* ... */ }
 if(res.any_conflict())   { /* ... */ }
 
-for(const auto& m : res.missing()) { 
+for(const auto& m : res.missing()) {
     cout << "missing " << m.param() << " after index " << m.after_index() << '\n';
 }
 
@@ -507,7 +507,7 @@ documented_value(const std::string& name, Target& tgt, const std::string& docstr
 template<class Target, class... Targets>
 clipp::parameter
 nodash_value(std::string label, Target&& tgt, Targets&&... tgts) {
-    return clipp::value(clipp::match::prefix_not{"-"}, std::move(label), 
+    return clipp::value(clipp::match::prefix_not{"-"}, std::move(label),
                std::forward<Target>(tgt), std::forward<Targets>(tgts)...);
 }
 ```
@@ -517,7 +517,7 @@ nodash_value(std::string label, Target&& tgt, Targets&&... tgts) {
 
 ## Examples
 
-Note that namespace qualifiers are omitted from all examples for better readability. 
+Note that namespace qualifiers are omitted from all examples for better readability.
 The repository folder "examples" contains code for most of the following examples.
 
 - [options](#options)
@@ -563,15 +563,15 @@ OPTIONS
 ```cpp
 bool a = false, b = false, c = true; //target variables
 
-auto cli = ( 
+auto cli = (
     option("-a").set(a)                  % "activates a",
     option("-b").set(b)                  % "activates b",
     option("-c", "--noc").set(c,false)   % "deactivates c",
     option("--hi")([]{cout << "hi!\n";}) % "says hi");
 
-if(parse(argc, argv, cli)) 
+if(parse(argc, argv, cli))
     cout << "a=" << a << "\nb=" << b << "\nc=" << c << '\n';
-else 
+else
     cout << make_man_page(cli, "switch");
 ```
 This will set ```a``` to true, if ```-a``` is found, ```b``` to true, if ```-b``` is found, ```c``` to false, if ```-c``` or ```--noc``` are found and prints "hi" if ```--hi``` is found in ```argv```. In case of parsing errors a man page will be printed.
@@ -579,9 +579,9 @@ This will set ```a``` to true, if ```-a``` is found, ```b``` to true, if ```-b``
 
 
 ### Coding Styles
-If you like it more verbose use ```set``` to set variables, ```call``` to call functions and ```doc``` for docstrings. The sequence of member function calls doesn't matter. 
+If you like it more verbose use ```set``` to set variables, ```call``` to call functions and ```doc``` for docstrings. The sequence of member function calls doesn't matter.
 ```cpp
-auto cli = ( 
+auto cli = (
     option("-b").set(b).doc("activates b"),
     option("-c", "--noc").set(c,false).doc("deactivates c"),
     option("--hi").call([]{cout << "hi!\n";}).doc("says hi") );
@@ -589,27 +589,27 @@ auto cli = (
 
 #### You can also use ```operator >>``` and ```operator <<``` to define actions
 ```cpp
-auto cli = ( 
-    option("-b")          % "activates b"   >> b,             
+auto cli = (
+    option("-b")          % "activates b"   >> b,
     option("-c", "--noc") % "deactivates c" >> set(c,false),
     option("--hi")        % "says hi"       >> []{cout << "hi!\n";} );
 ```
 
 ```cpp
-auto cli = ( 
-    option("-b")          % "activates b"   >> b,             
+auto cli = (
+    option("-b")          % "activates b"   >> b,
     option("-c", "--noc") % "deactivates c" >> set(c,false),
     option("--hi")        % "says hi"       >> []{cout << "hi!\n";} );
 ```
 ```cpp
-auto cli = ( 
+auto cli = (
     b                    << option("-b")          % "activates b",
     set(c,false)         << option("-c", "--noc") % "deactivates c",
     []{cout << "hi!\n";} << option("--hi")        % "says hi" );
 
 ```
 ```cpp
-auto cli = ( 
+auto cli = (
     "activates b"   % option("-b")          >> b,
     "deactivates c" % option("-c", "--noc") >> set(c,false),
     "says hi"       % option("--hi")        >> []{cout << "hi!\n";} );
@@ -648,13 +648,13 @@ There are no limitations regarding formatting and you can have an arbitrary numb
 bool onetwo = false;
 auto myopt = option("-1", "-2", "1", "2", ":1", ":2", "--no1", "--no2").set(onetwo);
              //     ^----- will match any one of these strings ------^
-``` 
+```
 
 #### Same prefix for all flags
 ```cpp
 bool a = false, b = false;
 
-auto cli = with_prefix("-", 
+auto cli = with_prefix("-",
     option("a").set(a),     // -a
     option("b").set(b)      // -b
 );
@@ -675,7 +675,7 @@ auto cli = with_prefixes_short_long("-", "--",
 ```cpp
 bool a = false, b = false;
 
-auto cli = with_suffix(":", 
+auto cli = with_suffix(":",
     option("a").set(a),     // a:
     option("b").set(b)      // b:
 );
@@ -701,7 +701,7 @@ Note that identical flags will not trigger an error.
 
 
 ### Grouping
-Groups can be nested (see [here](#nested-alternatives)) and have their own documentation string. 
+Groups can be nested (see [here](#nested-alternatives)) and have their own documentation string.
 The statement ```auto cli = ( ... );``` creates a group, if there are more than two parameters/groups declared inside the parentheses.
 
 ```man
@@ -728,18 +728,18 @@ bool x = false, y = false, a = false, b = false;
 bool g = false, h = false, e = false, f = false;
 
 auto cli = (
-    (   option("x").set(x) % "sets X",  //simple group 
+    (   option("x").set(x) % "sets X",  //simple group
         option("y").set(y) % "sets Y"
     ),
-    (   option("a").set(a) % "activates A",   
-        option("b").set(b) % "activates B" 
+    (   option("a").set(a) % "activates A",
+        option("b").set(b) % "activates B"
     ) % "documented group 1:"           //docstring after group
     ,
     "documented group 2:" % (           //docstring before group
-        option("-g").set(g) % "activates G",   
-        option("-h").set(h) % "activates H" 
+        option("-g").set(g) % "activates G",
+        option("-h").set(h) % "activates H"
     ),
-    "activates E or F" % (              
+    "activates E or F" % (
         option("-e").set(e),        //no docstrings inside group
         option("-f").set(f)
     )
@@ -751,22 +751,22 @@ cout << make_man_page(cli, "myprogram");
 The above example is in fact shorthand for this:
 ```cpp
 group cli{
-    group{   
+    group{
         parameter{"x"}.set(x).doc("sets X"),
         parameter{"y"}.set(y).doc("sets Y")
     },
     group{
-        parameter{"a"}.set(a).doc("activates A"),   
+        parameter{"a"}.set(a).doc("activates A"),
         parameter{"b"}.set(b).doc("activates B")
     }.doc("documented group 1:")
     ,
     group{
-        parameter{"-g"}.set(g).doc("activates G"),   
+        parameter{"-g"}.set(g).doc("activates G"),
         parameter{"-h"}.set(h).doc("activates H")
     }.doc("documented group 2:")
     ,
     group{
-        parameter{"-e"}.set(e), 
+        parameter{"-e"}.set(e),
         parameter{"-f"}.set(f)
     }.doc("activates E or F")
 };
@@ -787,7 +787,7 @@ cli.push_back(option("x").sets(x).doc("sets X"));
 ```man
 SYNOPSIS
         myprogram <infile> <outfile> [-s]
-   
+
 OPTIONS
         infile        input filename
         outfile       output filename
@@ -796,7 +796,7 @@ OPTIONS
 
 ```cpp
 string ifile, ofile;
-bool split = false; 
+bool split = false;
 auto cli = (
     value("infile", ifile)             % "input filename",
     value("outfile", ofile)            % "output filename",
@@ -814,12 +814,12 @@ See [here](#coding-styles) for more on possible mapping styles.
 
 
 
-### Options With Values 
-Parameters can be sequenced using operator ```&``` or the function ```in_sequence```. Sequenced parameters can only be matched one after the other. This mechanism can be used to attach a value parameter to an option. 
+### Options With Values
+Parameters can be sequenced using operator ```&``` or the function ```in_sequence```. Sequenced parameters can only be matched one after the other. This mechanism can be used to attach a value parameter to an option.
 
 ```man
 SYNOPSIS
-       simplify [-n <count>] [-r <ratio>] [-m [<lines=5>]] 
+       simplify [-n <count>] [-r <ratio>] [-m [<lines=5>]]
 
 OPTIONS
        -n, --count <count>     number of iterations
@@ -833,7 +833,7 @@ bool domerge = false;
 long m = 5;
 auto print_ratio = [](const char* r) { cout << "using ratio of " << r << '\n'; };
 
-auto cli = ( 
+auto cli = (
     (option("-n", "--count") & value("count", n))           % "number of iterations",
     (option("-r", "--ratio") & value("ratio", print_ratio)) % "compression ratio",
     (option("-m").set(domerge) & opt_value("lines=5", m))   % "merge lines (default: 5)"
@@ -843,14 +843,14 @@ auto cli = (
 
 #### Alternative Value Mapping Styles
 ```cpp
-auto cli = ( 
+auto cli = (
     (option("-n", "--count") & value("count") >> n                 ) % "number of iterations",
     (option("-r", "--ratio") & value("ratio") >> print_ratio       ) % "compression ratio",
-    (option("-m"           ) & opt_value("lines=5") >> m >> domerge) % "merge lines (default: 5)" 
+    (option("-m"           ) & opt_value("lines=5") >> m >> domerge) % "merge lines (default: 5)"
 );
 ```
 ```cpp
-auto cli = ( 
+auto cli = (
     (option("-n", "--count") & value("count").set(n))         % "number of iterations",
     (option("-r", "--ratio") & value("ratio")(print_ratio))   % "compression ratio",
     (option("-m").set(domerge) & opt_value("lines=5").set(m)) % "merge lines (default: 5)"
@@ -860,7 +860,7 @@ See [here](#coding-styles) for more on coding styles.
 
 
 
-### Options With Multiple Values 
+### Options With Multiple Values
 Parameters can be sequenced using operator ```&``` or the function ```in_sequence```. Sequenced parameters can only be matched one after the other. This mechanism can be used to attach multiple values to an option.
 
 ```man
@@ -925,10 +925,10 @@ auto cli = (
 ```man
 SYNOPSIS
         simplify <file>... [-c] [-i <line>...]
-   
+
 OPTIONS
         <file>...               input files
-        -c, --compress          compress results             
+        -c, --compress          compress results
         -i, --ignore <line>...  lines to be ignored
 ```
 
@@ -945,7 +945,7 @@ auto cli = (
 
 The call ```values("v")``` is shorthand for ```value("v").repeatable(true)```.
 
-Note, that the  value parameter ```line``` is repeatable, but the flag ```--ignore``` is not. So 
+Note, that the  value parameter ```line``` is repeatable, but the flag ```--ignore``` is not. So
 something like
 ```
     simplify file1 file2 --ignore 1 2 --ignore 3 4 -c
@@ -957,10 +957,10 @@ However, it is possible if you make the group of ```--ignore``` and ```line``` i
 ```man
 SYNOPSIS
         simplify <file>... [-c] [-i <line>...]...
-   
+
 OPTIONS
         <file>...               input files
-        -c, --compress          compress results             
+        -c, --compress          compress results
         -i, --ignore <line>...  lines to be ignored
 ```
 
@@ -978,7 +978,7 @@ auto cli = (
 ```
 Now both the option ```--ignore``` *and* the value parameter ```value``` are repeatable. In all of the following examples ```lines``` will be set to ```{1,2,3,4}``` and ```c``` will be set to ```true```:
 ```
-    simplify file1 file2 -c --ignore 1 2 3 4 
+    simplify file1 file2 -c --ignore 1 2 3 4
     simplify file1 file2 --ignore 1 2 3 4 -c
     simplify file1 file2 --ignore 1 -c --ignore 2 3 4
     simplify file1 file2 --ignore 1 2 --ignore 3 4 -c
@@ -1003,11 +1003,11 @@ Actions are executed if a parameter matched an argument string in the command li
 - ```operator <<``` or ```operator >>``` assign arg strings to lvalues or call callable entities. Which kind of action will be performed is automatically determined through overload resolution.
 
 
-#### Predefined Functions 
+#### Predefined Functions
 ```cpp
-int x = 0;                   // equivalent to:     
-option("-x")(set(x))         // option("-x").set(x) 
-option("-x")(set(x,2))       // option("-x").set(x,2) 
+int x = 0;                   // equivalent to:
+option("-x")(set(x))         // option("-x").set(x)
+option("-x")(set(x,2))       // option("-x").set(x,2)
 option("-x")(increment(x))   // option("-x")([&]{++x;})
 option("-x")(decrement(x))   // option("-x")([&]{--x;})
 
@@ -1060,7 +1060,7 @@ OPTIONS
         -s      use swap file
 
         :vim, :st3, :atom, :emacs
-                editor(s) to use; multiple possible        
+                editor(s) to use; multiple possible
 ```
 
 ```cpp
@@ -1085,11 +1085,11 @@ auto cli = (
     ) % "editor(s) to use; multiple possible"
 );
 ```
-- Flags can be joined regardless of their length (second group in the example). 
+- Flags can be joined regardless of their length (second group in the example).
 - If the flags have a common prefix (```-``` or ```:``` in the example) it must be given at least
   once as leading prefix in the command line argument.
 - Allowed args for the first group are:
-  ```-r```, ```-b```, ```-s```, ```-rb```, ```-br```, ```-rs```, ```-sr```, 
+  ```-r```, ```-b```, ```-s```, ```-rb```, ```-br```, ```-rs```, ```-sr```,
   ```-sb```, ```-bs```, ```-rbs```, ```-rsb```, ...
 - Allowed args for the second group are:
   ```:vim```, ```:vim:atom```, ```:emacs:st3```, ```:vimatom```, ...
@@ -1152,21 +1152,21 @@ OPTIONS
         -o, --out <file>
                 output filename
 
-        -falign, -fnoalign 
+        -falign, -fnoalign
                 control alignment
 ```
 
 ```cpp
 string outfile = "a.out";
 bool align = false;
-     
+
 auto cli = (
     (option("-o", "--out") & value("output file", outfile)) % "output filename",
     ( option("-falign"  ).set(align,true) |
       option("-fnoalign").set(align,false) )                % "control alignment"
 );
 ```
-    
+
 Note, that the documentation string is attached to the group of parameters for better readability.
 
 
@@ -1195,7 +1195,7 @@ cout << usage_lines(cli, "format", fmt) << '\n';
 
 
 
-### Commands 
+### Commands
 **= positional, required flags**
 ```man
 SYNOPSIS
@@ -1203,7 +1203,7 @@ SYNOPSIS
 
 OPTIONS
         -e, --encoding  'utf8' or 'cp1252', default is UTF-8
-    
+
 ```
 
 ```cpp
@@ -1233,7 +1233,7 @@ OPTIONS
         -b, --buffer [<size=1024>]
                 sets buffer size in KiByte
 
-        --init, --no-init 
+        --init, --no-init
                 do or don't initialize
 
         -f, --out-format <format>
@@ -1243,14 +1243,14 @@ OPTIONS
 Value handling actions are omitted; see examples/nested_alternatives.cpp for a fully functional demo.
 ```cpp
 auto cli = (
-    command("help") 
+    command("help")
     | ( command("build"),
-        ( command("new") | command("add")),                  
+        ( command("new") | command("add")),
         values("file"),
         option("-v", "--verbose")                           % "print detailed report",
         (option("-b", "--buffer") & opt_value("size=1024")) % "sets buffer size in KiByte",
         ( option("--init") | option("--no-init") )          % "do or don't initialize"
-    ) 
+    )
     | ( command("query"),
         value("infile"),
         required("-o", "--out") & value("outfile"),
@@ -1259,7 +1259,7 @@ auto cli = (
 );
 ```
 
-Note: 
+Note:
 ```
 doc_formatting::split_alternatives(bool)             //default: true
 doc_formatting::alternatives_min_split_size(int)     //default: 3
@@ -1310,7 +1310,7 @@ OPTIONS
         -h, --help         show help
 ```
 
-Actions and target variables are omitted in the code. 
+Actions and target variables are omitted in the code.
 ```cpp
 auto copyMode = "copy mode:" % (
     command("copy") | command("move"),
@@ -1376,12 +1376,12 @@ auto cli = (
     (
         (   (command("copy") | command("move")),
             option("--all"), option("--replace"),
-            option("-f", "--force") 
+            option("-f", "--force")
         )
         | ( command("compare"),
             (command("date") | command("content")),
-            option("-b", "--binary"), option("-q", "--quick") 
-        ) 
+            option("-b", "--binary"), option("-q", "--quick")
+        )
         | ( command("merge"),
             (
                 ( command("content"),
@@ -1393,7 +1393,7 @@ auto cli = (
             ),
             required("-o") & value("outdir"),
             option("--show-conflicts")
-        ) 
+        )
         | command("list")
     ),
     values("files"),
@@ -1403,7 +1403,7 @@ auto cli = (
  ```
 ...but it is probably more readable and maintainable if you break up the CLI definition into logical parts.
 
-Note: 
+Note:
 ```
 doc_formatting::split_alternatives(bool)             //default: true
 doc_formatting::alternatives_min_split_size(int)     //default: 3
@@ -1456,12 +1456,12 @@ auto shipmove = (
 auto shipshoot = ( command("shoot").set(selected,mode::shipshoot),
                    coordinates );
 
-auto mines = ( 
+auto mines = (
     command("mine"),
-    (command("set"   ).set(selected,mode::mineset) | 
+    (command("set"   ).set(selected,mode::mineset) |
      command("remove").set(selected,mode::minerem) ),
     coordinates,
-    (option("--moored"  ).set(drift,false) % "Moored (anchored) mine." | 
+    (option("--moored"  ).set(drift,false) % "Moored (anchored) mine." |
      option("--drifting").set(drift,true)  % "Drifting mine."          )
 );
 
@@ -1476,7 +1476,7 @@ parse(argc, argv, navalcli);
 
 //handle results
 switch(m) {
-    case mode::none: 
+    case mode::none:
         break;
     case mode::help: {
         auto fmt = doc_formatting{}
@@ -1490,7 +1490,7 @@ switch(m) {
         }
         break;
     }
-    //... 
+    //...
 }
 ```
 
@@ -1498,7 +1498,7 @@ switch(m) {
 
 
 ### Value Filters
-If a parameter doesn't have flags, i.e. it is a value-parameter, a filter function will be used to test if it matches an argument string. The default filter is ```clipp::match::nonempty``` which will match any non-empty argument string. 
+If a parameter doesn't have flags, i.e. it is a value-parameter, a filter function will be used to test if it matches an argument string. The default filter is ```clipp::match::nonempty``` which will match any non-empty argument string.
 If you want more control over what is matched, you can use some other predefined filters or you can write your own ones (see [here](#custom-value-filters)).
 
 ```man
@@ -1535,7 +1535,7 @@ Note that there are additional functions for
 
 #### Using Filters Explicitly
 Two kinds of filters are supported right now that can be passed as first argument of ```value```, ```values```, ```opt_value``` or ```opt_values``` as well as argument of the constructor ```parameter::parameter(Filter&&)```
- - Predicates ```(const string&) -> bool``` 
+ - Predicates ```(const string&) -> bool```
    which should return true if and only if an argument is an exact match.
 
  - Substring matchers ```(const string&) -> subrange```
@@ -1554,10 +1554,10 @@ There are a couple of predefined filters in ```namespace clipp::match```, but yo
 
 Here is another example that makes sure we don't catch any value starting with "-" as a filename:
 ```cpp
-auto cli = (  
-    option("-a")  
+auto cli = (
+    option("-a")
     option("-f") & value(match::prefix_not("-"), "filename"),
-    option("-b")  
+    option("-b")
 );
 ```
 
@@ -1625,9 +1625,9 @@ Consider this CLI:
 ```cpp
 auto cli = (  option("-a"),  option("-f") & value("filename"),  option("-b")  );
 ```
-If we give ```-f -b``` or ```-b -f -a``` as command line arguments, an error will be reported, since the value after ```-f``` is not optional. 
+If we give ```-f -b``` or ```-b -f -a``` as command line arguments, an error will be reported, since the value after ```-f``` is not optional.
 
-This behavior is fine for most use cases. 
+This behavior is fine for most use cases.
 But what if we want our program to take any string as a filename, because our filenames might also collide with flag names? We can make the ```filename``` value parameter greedy, so that the next string after ```-f``` will always be matched with highest priority as soon as ```-f``` was given:
 ```cpp
 auto cli = (  option("-a"),  option("-f") & greedy(value("filename")),  option("-b")  );
@@ -1637,17 +1637,17 @@ or using ```operator !```:
 auto cli = (  option("-a"),  option("-f") & !value("filename"),   option("-b")  );
 ```
 
-Now, every string coming after an ```-f``` will be used as filename. 
+Now, every string coming after an ```-f``` will be used as filename.
 
 If we don't want just *any* kind of match accepted, but still retain a higher priority for a value parameter, we could use a [value filter](#value-filters):
 ```cpp
-auto cli = (  
+auto cli = (
     (   command("A"),
         option("-f") & !value(match::prefix_not("-"), "filename"),
-        option("-b")  
+        option("-b")
     ) |
     (   command("B"),
-        option("-x")  
+        option("-x")
     )
 );
 ```
@@ -1660,7 +1660,7 @@ Note, that there is an inherent decision problem: either we want the ```filename
 
 ### Generalized Joinable Parameters
 
-Not only flags, but arbitrary combinations of flags and values can be made joinable. This feature is especially powerful if combined with repeatable groups. 
+Not only flags, but arbitrary combinations of flags and values can be made joinable. This feature is especially powerful if combined with repeatable groups.
 Important: in order for an argument to be matched by such expressions, no parameter requirements must be violated during the matching. Also, no partial argument matches are allowed.
 
 #### Example 1: Counting Letters
@@ -1676,15 +1676,15 @@ auto cli = joinable( repeatable(
         option("b").call([&]{++bs;})
     ) );
 
-if(parse(argc, argv, cli))     
+if(parse(argc, argv, cli))
     cout << "as: " << as << "\nbs: " << bs << '\n';
-else 
+else
     cout << "Usage:\n" << usage_lines(cli, argv[0]) << '\n';
 ```
 
 Valid input includes:
 ```
-$ ./counter a                               
+$ ./counter a
 $ ./counter b
 $ ./counter ab
 $ ./counter abba
@@ -1723,7 +1723,7 @@ $ ./numbers 1,2
 $ ./numbers 1,2,3
 $ ./numbers 1.1 , 2
 $ ./numbers 1,2.3,4.5
-$ ./numbers 1,2,3 4.2 5,6 2 7.1,8.23,9 
+$ ./numbers 1,2,3 4.2 5,6 2 7.1,8.23,9
 ```
 
 **Warning:** Be careful with joinable and repeatable parameters! The resulting command line interface might be a lot less intuitive to use than you think. It can also be hard to get the "grammar" of complex parsing expressions right.
@@ -1738,7 +1738,7 @@ This will not match arguments like ```"1,"```. This is, because, if the repeat g
 ### Custom Value Filters
 Two kinds of filters are supported right now that can be passed as first argument of ```value```, ```values```, ```opt_value``` or ```opt_values``` as well as argument of the constructor ```parameter::parameter(Filter&&)```:
 
- - Predicates ```(const string&) -> bool``` 
+ - Predicates ```(const string&) -> bool```
    which should return true if and only if an argument is an exact match.
 
  - Substring matchers ```(const string&) -> subrange```
@@ -1778,7 +1778,7 @@ auto tag_name = [] (const string& arg) {
 
 std::set<string> tags;
 auto cli = joinable(
-    values(tag_name, "string", 
+    values(tag_name, "string",
            [&](const string& arg){ if(arg[1] != '/') tags.insert(arg);})
 );
 
@@ -1850,7 +1850,7 @@ auto cli = (
         .if_missing([]{ cout << "You need to provide at least one target filename!\n"; } )
         .if_blocked([]{ cout << "Target names must not be given before the source file name!\n"; })
     ,
-    option("--http").set(http,true) | 
+    option("--http").set(http,true) |
     option("--ftp").set(http,false) % "protocol, default is http"
         .if_conflicted([]{ cout << "You can only use one protocol at a time!\n"; } )
     ,
@@ -1874,7 +1874,7 @@ The value parameter ```target``` will only match command line arguments that do 
 
 ### Parsing
 ```cpp
-auto cli = ( 
+auto cli = (
     command("make"),
     value("file")           % "name of file to make",
     option("-f", "--force") % "overwrite existing file"
@@ -1892,7 +1892,7 @@ auto args = std::vector<std::string> {"make", "out.txt", "-f"};
 parse(args, cli);
 ```
 
-The parse functions return an object of ```parsing_result``` which can be used for detailed analysis and will (explicitly) convert to false if any error occurred during parsing. 
+The parse functions return an object of ```parsing_result``` which can be used for detailed analysis and will (explicitly) convert to false if any error occurred during parsing.
 ```cpp
 auto result = parse(argc, argv, cli);
 
@@ -1997,19 +1997,19 @@ LICENSE
 The full code:
 ```cpp
 auto cli = (
-    command("help") | 
+    command("help") |
     ( command("build"),
         "build commands" %
         (   command("new")  % "make new database"
           | command("add")  % "append to existing database"
         ),
         value("file")
-    ) | 
+    ) |
     ( command("query"),
         "query settings" %
         (   required("-i", "--input") & value("infile") % "input file",
             option("-p", "--pretty-print") % "human friendly output")
-    ) | 
+    ) |
     ( command("info"),
         "database info modes" % (
             command("space") % "detailed memory occupation analysis" |
@@ -2021,12 +2021,12 @@ auto cli = (
                 )
             )
         )
-    ) | 
+    ) |
     "remove mode" % (
         command("remove"),
         "modify" % ( command("any") | command("all") ),
         value("regex") % "regular expression filter"
-    ) | 
+    ) |
     ( command("modify"),
         "modification operations" % (
             option("-c", "--compress") % "compress database in-memory",
@@ -2055,11 +2055,11 @@ auto fmt = doc_formatting{}
     .line_spacing(0)                           //number of empty lines after single documentation lines
     .paragraph_spacing(1)                      //number of empty lines before and after paragraphs
     .flag_separator(", ")                      //between flags of the same parameter
-    .param_separator(" ")                      //between parameters 
+    .param_separator(" ")                      //between parameters
     .group_separator(" ")                      //between groups (in usage)
-    .alternative_param_separator("|")          //between alternative flags 
-    .alternative_group_separator(" | ")        //between alternative groups 
-    .surround_group("(", ")")                  //surround groups with these 
+    .alternative_param_separator("|")          //between alternative flags
+    .alternative_group_separator(" | ")        //between alternative groups
+    .surround_group("(", ")")                  //surround groups with these
     .surround_alternatives("(", ")")           //surround group of alternatives with these
     .surround_alternative_flags("", "")        //surround alternative flags with these
     .surround_joinable("(", ")")               //surround group of joinable flags with these
@@ -2092,7 +2092,7 @@ cout << make_man_page(cli, "progname", fmt)
 The documentation generator class ```documentation``` can also take an additional third constructor argument that allows to filter parameters according to their properties.
 
 ```cpp
-int main(int argc, char* argv[]) {
+int main(int argc, const char** argv) {
     auto cli = (
         value("input file"),
         option("-r", "--recursive").set(rec).doc("convert files recursively"),
@@ -2119,13 +2119,13 @@ Parameters:
 
 #### Parameter Filters
 
-Any function/lambda that maps a parameter to a bool can be used as filter 
+Any function/lambda that maps a parameter to a bool can be used as filter
 predicate. CLIPP also comes with a default parameter filter class:
 ```cpp
 //all param_filter options (with their default values)
 auto filter = param_filter{}
     .prefix("")               //only parameters with given prefix
-    .required(tri::either)    //required parameters 
+    .required(tri::either)    //required parameters
     .blocking(tri::either)    //blocking/positional parameters
     .repeatable(tri::either)  //repeatable parameters
     .has_doc(tri::yes)        //parameters with/without docstrings
@@ -2144,7 +2144,7 @@ Well, I didn't find a library that makes building simple command line interfaces
 
 
 #### Other libraries (Boost, POCO, Qt, adishavit/Argh, Taywee/args ... or 'getopt')
- - often involve a lot of boilerplate (also for very simple use cases) 
+ - often involve a lot of boilerplate (also for very simple use cases)
  - Some libs might be okay in terms of usability, but don't let you build complex interfaces
    with nested alternatives, mixed commands & options, positional values, more than 2 flags per option, etc.
  - I really like ad-hoc parsers like [Argh](https://github.com/adishavit/argh) for their simplicity, but they don't generate usage / man pages and don't allow complex interfaces with error checking.
@@ -2164,12 +2164,12 @@ I also wanted the ability to keep *everything* related to one option/command/val
 
 
 ## Design Goals
- - minimize boilerplate 
+ - minimize boilerplate
  - simple code for simple use cases
  - good code readability (as far as C++ allows for it)
- - avoid ambiguities 
+ - avoid ambiguities
  - eliminate repetitions
- - ability to keep code related to one option/command/value together 
+ - ability to keep code related to one option/command/value together
  - support many different command line interface conventions
  - support different coding styles, conventions & tastes
  - value semantics wherever possible
@@ -2197,11 +2197,11 @@ I would be delighted to hear from anyone who uses *clipp* in their project(s). I
 
 ## Development
 *clipp* is still very young, so I probably won't add new features any time soon and rather:
- - fix bugs 
+ - fix bugs
  - improve test cases and coverage
- - add more code documentation 
+ - add more code documentation
  - clean up the code / make it more understandable
- - add the ability to use other string classes 
+ - add the ability to use other string classes
 
 
 [docopt]: http://docopt.org
