@@ -21,7 +21,7 @@
 #define main      clipp_sanity_main
 #endif
 
-int main()
+int main(void)
 {
     using namespace clipp;
     using std::cout;

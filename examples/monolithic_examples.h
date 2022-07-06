@@ -32,7 +32,7 @@ int clipp_parsing_main(int argc, const char** argv);
 int clipp_positional_values_main(int argc, const char** argv);
 int clipp_repeatable_main(int argc, const char** argv);
 int clipp_required_flags_main(int argc, const char** argv);
-int clipp_sanity_main();
+int clipp_sanity_main(void);
 int clipp_send_main(int argc, const char** argv);
 int clipp_simplify_main(int argc, const char** argv);
 int clipp_switches_main(int argc, const char** argv);
