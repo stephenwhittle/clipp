@@ -179,7 +179,9 @@ namespace traits {
 template <class Fn, class... Args>
 struct invoke_result {
 #if defined(__cpp_lib_is_invocable)
+#if !defined(_MSC_VER)
     using type = typename std::invoke_result<Fn, Args...>::type; // First available in c++17.
+#endif	
 #else
     using type = typename std::result_of<Fn(Args...)>::type; // Deprecated in c++17; removed in c++20.
 #endif
