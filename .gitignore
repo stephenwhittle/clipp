@@ -1,6 +1,9 @@
 /build*
 /dev
 /issues
+/out
+.vs
+.vscode
 .settings
 .project
 .cproject
@@ -10,4 +13,5 @@ tags
 *.json
 *.exe
 *.o
+!CMakePresets.json
 
