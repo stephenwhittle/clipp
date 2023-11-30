@@ -37,7 +37,7 @@ static void test(int lineNo, const doc_formatting& fmt,
 #define main      clipp_documentation_test_main
 #endif
 
-int main()
+int main(void)
 {
     try {
 
@@ -54,7 +54,7 @@ int main()
         .surround_labels("<", ">")
         .surround_optional("[", "]")
         .surround_repeat(",,,", "...")
-        .surround_alternatives(u8"§(§", u8"§)§")
+        .surround_alternatives((const char *)(u8"§(§"), (const char *)(u8"§)§"))
         .surround_alternative_flags("^(^", "^)^")
         .surround_group("(", ")")
         .surround_joinable("$($", "$)$")
