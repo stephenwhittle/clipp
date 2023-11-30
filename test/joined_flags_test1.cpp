@@ -56,7 +56,7 @@ test(int lineNo,
 #define main      clipp_joined_flags_test1_main
 #endif
 
-int main()
+int main(void)
 {
     using std::string;
 

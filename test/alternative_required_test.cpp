@@ -91,7 +91,7 @@ static void test(int lineNo,
 #define main      clipp_alternative_required_test_main
 #endif
 
-int main()
+int main(void)
 {
     try {
         {

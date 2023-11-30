@@ -135,7 +135,7 @@ struct test_clamp<T,Wide,false> {
 #define main      clipp_values_conversion_test_main
 #endif
 
-int main()
+int main(void)
 {
     try {
 

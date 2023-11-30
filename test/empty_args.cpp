@@ -82,7 +82,7 @@ void test_nonempty(int lineNo,
 #define main      clipp_empty_args_main
 #endif
 
-int main()
+int main(void)
 {
     try {
         test_empty(__LINE__, {}, active{});

@@ -65,7 +65,7 @@ static void test(int lineNo,
 #define main      clipp_joined_params_test2_main
 #endif
 
-int main()
+int main(void)
 {
     try {
         test(__LINE__, {}, counters{});

@@ -114,7 +114,7 @@ static void test(int lineNo,
 #define main      clipp_required_params_test2_main
 #endif
 
-int main()
+int main(void)
 {
     try {
 

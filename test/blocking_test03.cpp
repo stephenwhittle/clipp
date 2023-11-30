@@ -83,7 +83,7 @@ static void test(int lineNo,
 #define main      clipp_blocking_test03_main
 #endif
 
-int main()
+int main(void)
 {
     try {
         test(__LINE__, {""}, active{});

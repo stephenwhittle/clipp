@@ -70,7 +70,7 @@ static void test(int lineNo,
 #define main      clipp_alternative_groups_test_main
 #endif
 
-int main()
+int main(void)
 {
     try {
         test(__LINE__, {""}, active{0,0,0,0,0,0}, active{0,0,0,1,1,1});

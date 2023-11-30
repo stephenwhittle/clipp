@@ -75,7 +75,7 @@ static void test(int lineNo,
 #define main      clipp_joined_sequence_test_main
 #endif
 
-int main()
+int main(void)
 {
     try {
 

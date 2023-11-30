@@ -57,7 +57,7 @@ test(int lineNo,
 #define main      clipp_prefix_test_main
 #endif
 
-int main()
+int main(void)
 {
     using std::string;
 

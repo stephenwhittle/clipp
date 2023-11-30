@@ -117,7 +117,7 @@ static void test(int lineNo,
 #define main      clipp_actions_test_main
 #endif
 
-int main()
+int main(void)
 {
     try {
         test(__LINE__, {""},

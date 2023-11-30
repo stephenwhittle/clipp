@@ -85,7 +85,7 @@ make_cli_1()
 #define main      clipp_prefix_free_test_main
 #endif
 
-int main()
+int main(void)
 {
     using namespace clipp;
 
