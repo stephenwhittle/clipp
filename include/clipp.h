@@ -46,7 +46,7 @@
 #include <iterator>
 #include <functional>
 
-#if __cplusplus >= 201703L
+#if __cpp_lib_optional
 #include <optional>
 #endif
 
@@ -504,7 +504,7 @@ struct make<std::string> {
     }
 };
 
-#if __cplusplus >= 201703L
+#if __cpp_lib_optional
 template<class T>
 struct make<std::optional<T>> {
     static inline std::optional<T> from(const char* s) {
@@ -789,6 +789,24 @@ remove_ws(std::basic_string<C,T,A>& s)
             s.end() );
 }
 
+/*************************************************************************//**
+ * 
+ *  @brief replaces all instances of search with replace in string 
+ * 
+ ****************************************************************************/
+template<class C, class T, class A>
+inline void
+replace_in(std::basic_string<C,T,A>& s,
+           const std::basic_string<C,T,A>& search,
+           const std::basic_string<C,T,A>& replace)
+{
+    if (search.empty()) return;
+
+        std::size_t pos;
+        while ((pos = s.find(search)) != std::string::npos) {
+            s.replace(pos, search.size(), replace);
+        }
+}
 
 /*************************************************************************//**
  *
