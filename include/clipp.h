@@ -50,6 +50,10 @@
 #include <optional>
 #endif
 
+#if __cpp_lib_filesystem
+#include <filesystem>
+#endif
+
 /*************************************************************************//**
  *
  * @brief primary namespace
@@ -513,6 +517,20 @@ struct make<std::optional<T>> {
 };
 #endif
 
+#if __cpp_lib_filesystem
+template<>
+struct make<std::filesystem::path> {
+    static inline std::filesystem::path from(const char* s)
+    {
+        return std::filesystem::path(s);
+    }
+    static inline std::filesystem::path from(const std::string& s) {
+        return std::filesystem::path(s);
+    }
+};
+
+
+#endif
 
 /*************************************************************************//**
  *
